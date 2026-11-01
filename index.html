@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon.com: Online Shopping for Electronics, Apparel, Computers & more</title>
+    <meta name="description" content="Shop online for Electronics, Fashion, Home essentials and more with fast delivery, deals, and great prices.">
+    <!-- Google Fonts & Font Awesome for icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Overlay backdrop for drawer & modals -->
+    <div id="backdrop" class="backdrop"></div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toast-message">Item added to your Cart</span>
+    </div>
+
+    <!-- Slide-out Navigation Drawer -->
+    <aside id="side-drawer" class="side-drawer">
+        <div class="drawer-header">
+            <i class="fa-solid fa-circle-user fa-2x"></i>
+            <h3>Hello, Sign In</h3>
+            <button id="close-drawer" class="close-btn" aria-label="Close menu">&times;</button>
+        </div>
+        <div class="drawer-content">
+            <div class="drawer-section">
+                <h4>Digital Content & Devices</h4>
+                <ul>
+                    <li><a href="#">Amazon Prime Video <i class="fa-solid fa-chevron-right"></i></a></li>
+                    <li><a href="#">Amazon Music <i class="fa-solid fa-chevron-right"></i></a></li>
+                    <li><a href="#">Echo & Alexa <i class="fa-solid fa-chevron-right"></i></a></li>
+                    <li><a href="#">Fire Tablets & TV <i class="fa-solid fa-chevron-right"></i></a></li>
+                    <li><a href="#">Kindle E-readers & Books <i class="fa-solid fa-chevron-right"></i></a></li>
+                </ul>
+            </div>
+            <div class="drawer-divider"></div>
+            <div class="drawer-section">
+                <h4>Shop By Category</h4>
+                <ul>
+                    <li><a href="#">Mobiles, Computers <i class="fa-solid fa-chevron-right"></i></a></li>
+                    <li><a href="#">TV, Appliances, Electronics <i class="fa-solid fa-chevron-right"></i></a></li>
+                    <li><a href="#">Men's & Women's Fashion <i class="fa-solid fa-chevron-right"></i></a></li>
+                    <li><a href="#">Home, Kitchen, Pets <i class="fa-solid fa-chevron-right"></i></a></li>
+                    <li><a href="#">Beauty, Health, Grocery <i class="fa-solid fa-chevron-right"></i></a></li>
+                </ul>
+            </div>
+            <div class="drawer-divider"></div>
+            <div class="drawer-section">
+                <h4>Programs & Features</h4>
+                <ul>
+                    <li><a href="#">Today's Deals</a></li>
+                    <li><a href="#">Amazon Pay</a></li>
+                    <li><a href="#">Gift Cards & Mobile Recharges</a></li>
+                    <li><a href="#">Customer Service</a></li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Slide-out Cart Drawer -->
+    <aside id="cart-drawer" class="cart-drawer">
+        <div class="cart-drawer-header">
+            <h3><i class="fa-solid fa-cart-shopping"></i> Shopping Cart (<span id="cart-items-count">0</span> items)</h3>
+            <button id="close-cart-btn" class="close-btn">&times;</button>
+        </div>
+        <div id="cart-items-container" class="cart-items-container">
+            <!-- Dynamically populated or empty state -->
+            <div class="cart-empty-state">
+                <i class="fa-solid fa-basket-shopping fa-3x"></i>
+                <p>Your Amazon Cart is empty</p>
+                <small>Explore today's featured deals and add products to get started.</small>
+            </div>
+        </div>
+        <div class="cart-drawer-footer">
+            <div class="cart-subtotal-row">
+                <span>Subtotal:</span>
+                <span id="cart-subtotal-amount" class="cart-total-price">$0.00</span>
+            </div>
+            <button id="checkout-btn" class="proceed-checkout-btn">Proceed to Buy (<span id="checkout-count">0</span> items)</button>
+        </div>
+    </aside>
+
+    <!-- Top Navigation Bar -->
+    <header class="main-header">
+        <nav class="navbar-top">
+            <!-- Logo -->
+            <a href="#" class="nav-logo border-hover">
+                <span class="logo-text">amazon</span>
+                <span class="logo-dot">.in</span>
+                <span class="logo-smile"></span>
+            </a>
+
+            <!-- Delivery Location -->
+            <div class="nav-location border-hover" id="location-btn">
+                <i class="fa-solid fa-location-dot location-icon"></i>
+                <div class="location-details">
+                    <span class="nav-line-1">Delivering to New York 10001</span>
+                    <span class="nav-line-2">Update location</span>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="nav-search">
+                <div class="search-category-select">
+                    <select id="search-category" aria-label="Search category">
+                        <option value="all">All Categories</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="computers">Computers & Accessories</option>
+                        <option value="audio">Headphones & Audio</option>
+                        <option value="fashion">Fashion & Apparel</option>
+                        <option value="home">Home & Kitchen</option>
+                    </select>
+                </div>
+                <input type="text" id="search-input" placeholder="Search Amazon..." autocomplete="off">
+                <button type="button" id="search-btn" class="search-submit-btn" aria-label="Submit search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+
+            <!-- Language Selector -->
+            <div class="nav-language border-hover">
+                <span class="flag-icon">🇺🇸</span>
+                <span class="lang-code">EN</span>
+                <i class="fa-solid fa-caret-down"></i>
+            </div>
+
+            <!-- Account & Lists -->
+            <div class="nav-account border-hover" id="account-btn">
+                <span class="nav-line-1">Hello, sign in</span>
+                <span class="nav-line-2">Account & Lists <i class="fa-solid fa-caret-down"></i></span>
+            </div>
+
+            <!-- Returns & Orders -->
+            <div class="nav-orders border-hover">
+                <span class="nav-line-1">Returns</span>
+                <span class="nav-line-2">& Orders</span>
+            </div>
+
+            <!-- Cart Button -->
+            <div class="nav-cart border-hover" id="open-cart-btn">
+                <div class="cart-icon-wrapper">
+                    <span id="nav-cart-badge" class="cart-badge">0</span>
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <span class="nav-line-2 cart-label">Cart</span>
+            </div>
+        </nav>
+
+        <!-- Sub Navbar (Menu Links) -->
+        <nav class="navbar-sub">
+            <div class="sub-links-left">
+                <button id="open-drawer-btn" class="sub-menu-all border-hover">
+                    <i class="fa-solid fa-bars"></i>
+                    <span>All</span>
+                </button>
+                <a href="#featured-deal" class="sub-link border-hover">Today's Deals</a>
+                <a href="#categories" class="sub-link border-hover">Best Sellers</a>
+                <a href="#categories" class="sub-link border-hover">Mobiles</a>
+                <a href="#categories" class="sub-link border-hover">Customer Service</a>
+                <a href="#featured-deal" class="sub-link border-hover">Electronics</a>
+                <a href="#carousel-section" class="sub-link border-hover prime-tag"><i class="fa-solid fa-bolt"></i> Prime</a>
+                <a href="#categories" class="sub-link border-hover">Fashion</a>
+                <a href="#categories" class="sub-link border-hover">Home & Kitchen</a>
+                <a href="#categories" class="sub-link border-hover">Amazon Pay</a>
+            </div>
+            <div class="sub-links-right">
+                <span class="deal-highlight">Great Summer Sale | Live Now</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="page-container">
+
+        <!-- Hero Banner Carousel -->
+        <section class="hero-carousel" id="hero-carousel">
+            <div class="carousel-slide active" style="background: linear-gradient(180deg, rgba(35,47,62,0.85) 0%, rgba(240,242,242,1) 100%), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;">
+                <div class="hero-content">
+                    <span class="hero-badge"><i class="fa-solid fa-bolt"></i> Mega Electronics Sale</span>
+                    <h1>Next-Gen Tech Deals Up to 60% Off</h1>
+                    <p>Upgrade to high-performance audio, 4K monitors, laptops and wireless accessories with free 1-day Prime delivery.</p>
+                    <a href="#featured-deal" class="hero-cta-btn">Shop Featured Deals</a>
+                </div>
+            </div>
+            <div class="carousel-slide" style="background: linear-gradient(180deg, rgba(20,110,120,0.85) 0%, rgba(240,242,242,1) 100%), url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1800&q=80') center/cover no-repeat;">
+                <div class="hero-content">
+                    <span class="hero-badge"><i class="fa-solid fa-crown"></i> Amazon Exclusive</span>
+                    <h1>Aether Pro ANC Wireless Headphones</h1>
+                    <p>Experience studio-grade active noise cancellation with 45-hour playback and spatial sound technology.</p>
+                    <a href="#featured-deal" class="hero-cta-btn">View Special Offer</a>
+                </div>
+            </div>
+            <!-- Carousel Navigation Arrows -->
+            <button class="carousel-control prev-control" id="hero-prev" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="carousel-control next-control" id="hero-next" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></button>
+        </section>
+
+        <!-- Product Cards Showcase (Amazon 4-Grid Style) -->
+        <section class="cards-grid-section" id="categories">
+            
+            <!-- Card 1: 4-Grid Card (Electronics) -->
+            <div class="quad-card">
+                <h3 class="card-title">Revamp your home in style</h3>
+                <div class="quad-grid">
+                    <div class="quad-item" onclick="filterCategory('home')">
+                        <img src="https://images.unsplash.com/photo-1540518614846-7ede433c4ef5?auto=format&fit=crop&w=300&q=80" alt="Cushion covers, bedsheets">
+                        <span>Bedsheets & Decor</span>
+                    </div>
+                    <div class="quad-item" onclick="filterCategory('home')">
+                        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&q=80" alt="Kitchen essentials">
+                        <span>Kitchen & Dining</span>
+                    </div>
+                    <div class="quad-item" onclick="filterCategory('home')">
+                        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=300&q=80" alt="Home storage">
+                        <span>Storage & Organization</span>
+                    </div>
+                    <div class="quad-item" onclick="filterCategory('home')">
+                        <img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=300&q=80" alt="Lighting solutions">
+                        <span>Modern Lighting</span>
+                    </div>
+                </div>
+                <a href="#featured-deal" class="card-link">Explore all home solutions</a>
+            </div>
+
+            <!-- Card 2: 4-Grid Card (Appliances & Tech) -->
+            <div class="quad-card">
+                <h3 class="card-title">Appliances for your smart home</h3>
+                <div class="quad-grid">
+                    <div class="quad-item" onclick="filterCategory('electronics')">
+                        <img src="https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=300&q=80" alt="Air conditioners">
+                        <span>Air Conditioners</span>
+                    </div>
+                    <div class="quad-item" onclick="filterCategory('electronics')">
+                        <img src="https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=300&q=80" alt="Refrigerators">
+                        <span>Refrigerators</span>
+                    </div>
+                    <div class="quad-item" onclick="filterCategory('electronics')">
+                        <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&q=80" alt="Microwaves">
+                        <span>Microwaves</span>
+                    </div>
+                    <div class="quad-item" onclick="filterCategory('electronics')">
+                        <img src="https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=300&q=80" alt="Washing machines">
+                        <span>Washing Machines</span>
+                    </div>
+                </div>
+                <a href="#featured-deal" class="card-link">See all appliances deals</a>
+            </div>
+
+            <!-- Card 3: 4-Grid Card (Fashion) -->
+            <div class="quad-card">
+                <h3 class="card-title">Up to 60% off | Styles for you</h3>
+                <div class="quad-grid">
+                    <div class="quad-item" onclick="filterCategory('fashion')">
+                        <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=300&q=80" alt="Men's clothing">
+                        <span>Men's Casual Wear</span>
+                    </div>
+                    <div class="quad-item" onclick="filterCategory('fashion')">
+                        <img src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=300&q=80" alt="Women's clothing">
+                        <span>Women's Dresses</span>
+                    </div>
+                    <div class="quad-item" onclick="filterCategory('fashion')">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=300&q=80" alt="Footwear">
+                        <span>Athletic Footwear</span>
+                    </div>
+                    <div class="quad-item" onclick="filterCategory('fashion')">
+                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=300&q=80" alt="Watches">
+                        <span>Smart Watches</span>
+                    </div>
+                </div>
+                <a href="#featured-deal" class="card-link">See latest trend collections</a>
+            </div>
+
+            <!-- Card 4: Sign-in Prompt / Prime Box -->
+            <div class="quad-card prime-banner-card">
+                <h3 class="card-title">Sign in for your best experience</h3>
+                <div class="sign-in-prompt-box">
+                    <button class="prime-login-btn" onclick="openLoginPrompt()">Sign in securely</button>
+                    <p class="new-customer-text">New customer? <a href="#">Start here.</a></p>
+                </div>
+                <div class="prime-promo-ad">
+                    <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=400&q=80" alt="Amazon Prime Delivery">
+                    <div class="promo-text">
+                        <strong>Fast & Free Prime Shipping</strong>
+                        <span>Unlimited entertainment & exclusive early access to deals.</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Star Featured Deal (Using the High-Res Generated Headphones Asset!) -->
+        <section class="featured-spotlight-section" id="featured-deal">
+            <div class="spotlight-badge">
+                <i class="fa-solid fa-fire"></i> DEAL OF THE DAY
+            </div>
+            
+            <div class="spotlight-card">
+                <div class="spotlight-img-col">
+                    <span class="discount-pill">33% OFF</span>
+                    <img src="product_headphones.jpg" alt="Aether Pro Wireless Noise Cancelling Over-Ear Headphones" id="main-product-img" class="spotlight-img">
+                </div>
+
+                <div class="spotlight-details-col">
+                    <div class="brand-rating-row">
+                        <span class="product-brand">Brand: Aether Acoustics</span>
+                        <div class="star-rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                            <span class="rating-count">4.8 (14,920 ratings)</span>
+                        </div>
+                    </div>
+
+                    <h2 class="spotlight-title">Aether Pro Wireless Active Noise Cancelling Over-Ear Headphones</h2>
+                    <p class="spotlight-subtext">Premium Matte Black Edition with Hi-Res Audio, Custom 40mm Neodymium Drivers, 45-Hour Battery Life & Ambient Sound Mode</p>
+                    
+                    <div class="prime-badge-row">
+                        <span class="prime-pill"><i class="fa-solid fa-bolt"></i> prime</span>
+                        <span class="delivery-time">FREE One-Day Delivery by Tomorrow, 11 AM</span>
+                    </div>
+
+                    <div class="price-container">
+                        <span class="deal-tag">Limited time deal</span>
+                        <div class="price-row">
+                            <span class="price-currency">$</span>
+                            <span class="price-main">199</span>
+                            <span class="price-fraction">99</span>
+                            <span class="price-original">List Price: <del>$299.99</del></span>
+                            <span class="price-saved">Save $100.00 (33%)</span>
+                        </div>
+                        <p class="inclusive-taxes">Inclusive of all taxes. Free 30-day replacement & 1-year manufacturer warranty.</p>
+                    </div>
+
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <i class="fa-solid fa-battery-full"></i>
+                            <div><strong>45 Hours</strong><span>Continuous Playback</span></div>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fa-solid fa-volume-high"></i>
+                            <div><strong>Hi-Res Audio</strong><span>Spatial 3D Sound</span></div>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fa-solid fa-ear-listen"></i>
+                            <div><strong>Hybrid ANC</strong><span>-38dB Noise Cut</span></div>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fa-solid fa-bolt-lightning"></i>
+                            <div><strong>Fast USB-C</strong><span>10 min = 5 hours</span></div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons-row">
+                        <button class="add-cart-btn pulse-glow" onclick="addToCart('Aether Pro Wireless ANC Headphones', 199.99, 'product_headphones.jpg')">
+                            <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                        </button>
+                        <button class="buy-now-btn" onclick="buyNow('Aether Pro Wireless ANC Headphones', 199.99, 'product_headphones.jpg')">
+                            <i class="fa-solid fa-bag-shopping"></i> Buy Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Horizontal Scrollable Deals Carousel (Today's Top Picks) -->
+        <section class="horizontal-deals-section" id="carousel-section">
+            <div class="section-header-row">
+                <h2>Today's Top Deals & Recommended for You</h2>
+                <span class="view-all-link">See all deals <i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+
+            <div class="horizontal-scroll-wrapper">
+                <button class="scroll-arrow left" id="scroll-deals-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
+                
+                <div class="deals-track" id="deals-track">
+                    <!-- Product Item 1 -->
+                    <div class="deal-product-card" data-category="electronics">
+                        <div class="deal-badge-pill">Up to 40% Off</div>
+                        <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=350&q=80" alt="Apple Watch Series 9 Smartwatch">
+                        <div class="deal-product-info">
+                            <div class="deal-price-row">
+                                <span class="deal-currency">$</span>
+                                <span class="deal-price">349.00</span>
+                                <span class="deal-old-price"><del>$429.00</del></span>
+                            </div>
+                            <h4 class="deal-name">Smart Fitness Watch with ECG & OLED Display</h4>
+                            <div class="rating-stars-small">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                <span>(9,420)</span>
+                            </div>
+                            <button class="mini-add-cart-btn" onclick="addToCart('Smart Fitness Watch OLED', 349.00, 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=350&q=80')">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product Item 2 -->
+                    <div class="deal-product-card" data-category="computers">
+                        <div class="deal-badge-pill">Best Seller</div>
+                        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=350&q=80" alt="Ultra-Thin 15-inch Laptop">
+                        <div class="deal-product-info">
+                            <div class="deal-price-row">
+                                <span class="deal-currency">$</span>
+                                <span class="deal-price">899.99</span>
+                                <span class="deal-old-price"><del>$1,149.00</del></span>
+                            </div>
+                            <h4 class="deal-name">Ultra-Slim 15.6" Laptop (16GB RAM, 512GB SSD)</h4>
+                            <div class="rating-stars-small">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                                <span>(5,810)</span>
+                            </div>
+                            <button class="mini-add-cart-btn" onclick="addToCart('Ultra-Slim 15.6 Laptop 16GB', 899.99, 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=350&q=80')">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product Item 3 -->
+                    <div class="deal-product-card" data-category="electronics">
+                        <div class="deal-badge-pill">Deal of Day</div>
+                        <img src="https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?auto=format&fit=crop&w=350&q=80" alt="Studio Audio Microphone">
+                        <div class="deal-product-info">
+                            <div class="deal-price-row">
+                                <span class="deal-currency">$</span>
+                                <span class="deal-price">79.50</span>
+                                <span class="deal-old-price"><del>$120.00</del></span>
+                            </div>
+                            <h4 class="deal-name">Condenser USB Microphone for Podcasting & Gaming</h4>
+                            <div class="rating-stars-small">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                <span>(3,218)</span>
+                            </div>
+                            <button class="mini-add-cart-btn" onclick="addToCart('Condenser USB Microphone', 79.50, 'https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?auto=format&fit=crop&w=350&q=80')">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product Item 4 -->
+                    <div class="deal-product-card" data-category="audio">
+                        <div class="deal-badge-pill">Hot Pick</div>
+                        <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=350&q=80" alt="Portable Bluetooth Waterproof Speaker">
+                        <div class="deal-product-info">
+                            <div class="deal-price-row">
+                                <span class="deal-currency">$</span>
+                                <span class="deal-price">49.99</span>
+                                <span class="deal-old-price"><del>$89.00</del></span>
+                            </div>
+                            <h4 class="deal-name">Waterproof Portable Bluetooth 5.3 Outdoor Speaker</h4>
+                            <div class="rating-stars-small">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                                <span>(18,204)</span>
+                            </div>
+                            <button class="mini-add-cart-btn" onclick="addToCart('Waterproof Bluetooth Speaker', 49.99, 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=350&q=80')">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Product Item 5 -->
+                    <div class="deal-product-card" data-category="computers">
+                        <div class="deal-badge-pill">25% Off</div>
+                        <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=350&q=80" alt="Ergonomic Mechanical Keyboard">
+                        <div class="deal-product-info">
+                            <div class="deal-price-row">
+                                <span class="deal-currency">$</span>
+                                <span class="deal-price">89.00</span>
+                                <span class="deal-old-price"><del>$119.00</del></span>
+                            </div>
+                            <h4 class="deal-name">RGB Wireless Mechanical Keyboard (Hot-swappable)</h4>
+                            <div class="rating-stars-small">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                <span>(6,120)</span>
+                            </div>
+                            <button class="mini-add-cart-btn" onclick="addToCart('RGB Wireless Mechanical Keyboard', 89.00, 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=350&q=80')">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="scroll-arrow right" id="scroll-deals-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </section>
+
+        <!-- Newsletter & Prime Promotion Bar -->
+        <section class="prime-banner-strip">
+            <div class="prime-strip-content">
+                <i class="fa-brands fa-amazon fa-3x"></i>
+                <div class="strip-text">
+                    <h3>Join Prime today for exclusive deals & 1-day delivery</h3>
+                    <p>Free 30-day trial for new members. Cancel anytime.</p>
+                </div>
+                <button class="strip-btn" onclick="openLoginPrompt()">Try Prime 30-Days Free</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <!-- Back to Top Button -->
+        <div class="back-to-top" id="back-to-top">
+            <span>Back to top</span>
+        </div>
+
+        <!-- Footer Navigation Columns -->
+        <div class="footer-columns-container">
+            <div class="footer-col">
+                <h4>Get to Know Us</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press Releases</a></li>
+                    <li><a href="#">Amazon Science</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Connect with Us</h4>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Make Money with Us</h4>
+                <ul>
+                    <li><a href="#">Sell on Amazon</a></li>
+                    <li><a href="#">Sell under Amazon Accelerator</a></li>
+                    <li><a href="#">Protect and Build Your Brand</a></li>
+                    <li><a href="#">Amazon Global Selling</a></li>
+                    <li><a href="#">Become an Affiliate</a></li>
+                    <li><a href="#">Fulfilment by Amazon</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Let Us Help You</h4>
+                <ul>
+                    <li><a href="#">COVID-19 and Amazon</a></li>
+                    <li><a href="#">Your Account</a></li>
+                    <li><a href="#">Returns Centre</a></li>
+                    <li><a href="#">100% Purchase Protection</a></li>
+                    <li><a href="#">Amazon App Download</a></li>
+                    <li><a href="#">Help</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <!-- Footer Sub-bar -->
+        <div class="footer-bottom-bar">
+            <div class="footer-logo">
+                <span class="logo-text">amazon</span>
+            </div>
+            <div class="footer-locale-selectors">
+                <button class="locale-btn"><i class="fa-solid fa-globe"></i> English</button>
+                <button class="locale-btn"><i class="fa-solid fa-dollar-sign"></i> USD - U.S. Dollar</button>
+                <button class="locale-btn">🇺🇸 United States</button>
+            </div>
+        </div>
+
+        <!-- Copyright & Legal -->
+        <div class="footer-copyright-row">
+            <div class="legal-links">
+                <a href="#">Conditions of Use & Sale</a>
+                <a href="#">Privacy Notice</a>
+                <a href="#">Interest-Based Ads</a>
+            </div>
+            <p>© 1996-2026, Amazon.com, Inc. or its affiliates. Created with modern HTML5, CSS3, & Vanilla JavaScript.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
